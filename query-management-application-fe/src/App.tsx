@@ -18,14 +18,17 @@ import {
   CircularProgress,
   Alert,
 } from '@mui/material'
+import { QueryCreationDialog } from './components/QueryCreationDialog'
+import { QueryViewDialog } from './components/QueryViewDialog'
+import { FormDataTable } from './components/FormDataTable'
 
-type Question = {
+export type Question = {
   id: string
   question: string
   answer: string
 }
 
-type Query = {
+export type Query = {
   id: string
   title: string
   description: string
@@ -173,101 +176,31 @@ const App: React.FC = () => {
       {loading ? (
         <CircularProgress />
       ) : (
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell><strong>Question</strong></TableCell>
-                <TableCell><strong>Answer</strong></TableCell>
-                <TableCell align="right"><strong>Query</strong></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-            {formData.map((item) => {
-              const relatedQuery = queries.find((q) => q.formDataId === item.id)
-              return (
-                <TableRow key={item.id}>
-                  <TableCell>{item.question}</TableCell>
-                  <TableCell>{item.answer}</TableCell>
-                  <TableCell align="right">
-                    {relatedQuery &&
-                    <Button variant="contained" color={relatedQuery.status === 'Open' ? 'error' : 'success'} sx={{width: "100%"}} onClick={() => openQueryView(relatedQuery)}>
-                      {relatedQuery.status}
-                    </Button>}
-                    {!relatedQuery &&
-                    <Button variant="outlined" sx={{width: "100%"}} onClick={() => openModal(item)}>
-                      Create
-                    </Button>}
-                  </TableCell>
-                </TableRow>
-              )
-            })}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <FormDataTable
+          formData={formData}
+          queries={queries}
+          onCreateClick={openModal}
+          onViewClick={openQueryView}
+        />
       )}
 
       {/* Query Creation */}
-      <Dialog open={modalOpen} onClose={closeModal}>
-        <DialogTitle>User Details</DialogTitle>
-        <DialogContent dividers sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <Typography><strong>Question:</strong> {selectedUser?.question}</Typography>
-          <Typography><strong>Answer:</strong> {selectedUser?.answer}</Typography>
-          <TextField
-            label="Add Description"
-            variant="outlined"
-            fullWidth
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeModal}>Close</Button>
-          <Button onClick={handleCreate} variant="contained">Create</Button>
-        </DialogActions>
-      </Dialog>
+      <QueryCreationDialog
+        open={modalOpen}
+        selectedUser={selectedUser}
+        description={description}
+        onDescriptionChange={setDescription}
+        onClose={closeModal}
+        onSubmit={handleCreate}
+      />
 
       {/* Query View */}
-      <Dialog open={queryViewOpen} onClose={closeQueryView} maxWidth="sm" fullWidth>
-        <DialogTitle>Query | {selectedQuery?.title}</DialogTitle>
-        <DialogContent dividers sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-
-        <Paper
-          elevation={1}
-          sx={{
-            p: 2,
-            backgroundColor:
-              selectedQuery?.status === 'Resolved' ? '#e6f4ea' : '#fdecea', // green or red background
-          }}
-        >
-          <Typography>
-            <strong>Status:</strong> {selectedQuery?.status}
-          </Typography>
-          <Typography>
-            <strong>Created At:</strong>{' '}
-            {selectedQuery?.createdAt ? new Date(selectedQuery.createdAt).toLocaleString() : 'N/A'}
-          </Typography>
-          {selectedQuery?.status === 'Open' && (
-            <Button
-              variant="contained"
-              color="success"
-              sx={{ mt: 1 }}
-              onClick={() => handleMarkResolved(selectedQuery?.id)}
-            >
-              Resolve
-            </Button>
-          )}
-
-        </Paper>
-          <Typography>
-            <strong>Description:</strong> {selectedQuery?.description}
-          </Typography>
-        </DialogContent>
-
-        <DialogActions>
-          <Button onClick={closeQueryView}>Close</Button>
-        </DialogActions>
-      </Dialog>
+      <QueryViewDialog
+        open={queryViewOpen}
+        query={selectedQuery}
+        onClose={closeQueryView}
+        onResolve={handleMarkResolved}
+      />
     </Container>
   )
 }
