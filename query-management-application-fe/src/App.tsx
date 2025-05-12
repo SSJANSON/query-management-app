@@ -134,6 +134,37 @@ const App: React.FC = () => {
     }
   }
 
+  const handleMarkResolved = async (selectedQueryId: string | undefined) => {
+
+    console.log("hi")
+    const payload = {
+      status: "Resolved",
+    }
+    console.log(`http://127.0.0.1:8080/query/${selectedQueryId}`)
+    try {
+      const response = await fetch(`http://127.0.0.1:8080/query/${selectedQueryId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+  
+      if (!response.ok) {
+        throw new Error(`Failed to update query: ${response.status}`)
+      }
+  
+      console.log('Description successfully updated:', payload)
+    } catch (err) {
+      console.error(err)
+      alert('Error updating query. See console for details.')
+    } finally {
+      fetchData()
+      closeQueryView()
+
+    }
+  }
+
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>User Table</Typography>
@@ -160,11 +191,11 @@ const App: React.FC = () => {
                   <TableCell>{item.answer}</TableCell>
                   <TableCell align="right">
                     {relatedQuery &&
-                    <Button variant="outlined" onClick={() => openQueryView(relatedQuery)}>
+                    <Button variant="contained" color={relatedQuery.status === 'Open' ? 'error' : 'success'} sx={{width: "100%"}} onClick={() => openQueryView(relatedQuery)}>
                       {relatedQuery.status}
                     </Button>}
                     {!relatedQuery &&
-                    <Button variant="outlined" onClick={() => openModal(item)}>
+                    <Button variant="outlined" sx={{width: "100%"}} onClick={() => openModal(item)}>
                       Create
                     </Button>}
                   </TableCell>
@@ -201,35 +232,40 @@ const App: React.FC = () => {
         <DialogTitle>Query | {selectedQuery?.title}</DialogTitle>
         <DialogContent dividers sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
 
-          {/* ✅ Status & Created At Block (Green Background) */}
-          <Paper elevation={1} sx={{ p: 2, backgroundColor: '#e6f4ea' }}>
-            <Typography><strong>Status:</strong> {selectedQuery?.status ?? 'Open'}</Typography>
-            <Typography><strong>Created At:</strong> {selectedQuery?.createdAt ? new Date(selectedQuery.createdAt).toLocaleString() : 'N/A'}</Typography>
+        <Paper
+          elevation={1}
+          sx={{
+            p: 2,
+            backgroundColor:
+              selectedQuery?.status === 'Resolved' ? '#e6f4ea' : '#fdecea', // green or red background
+          }}
+        >
+          <Typography>
+            <strong>Status:</strong> {selectedQuery?.status}
+          </Typography>
+          <Typography>
+            <strong>Created At:</strong>{' '}
+            {selectedQuery?.createdAt ? new Date(selectedQuery.createdAt).toLocaleString() : 'N/A'}
+          </Typography>
+          {selectedQuery?.status === 'Open' && (
             <Button
               variant="contained"
               color="success"
               sx={{ mt: 1 }}
-              // onClick={() => handleMarkResolved(selectedQuery?.id)}
+              onClick={() => handleMarkResolved(selectedQuery?.id)}
             >
-              Mark as Resolved
+              Resolve
             </Button>
-          </Paper>
+          )}
 
-          {/* ✅ Description Input Field */}
-          <TextField
-            label="Add Description"
-            variant="outlined"
-            fullWidth
-            multiline
-            minRows={3}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
+        </Paper>
+          <Typography>
+            <strong>Description:</strong> {selectedQuery?.description}
+          </Typography>
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={closeModal}>Close</Button>
-          <Button onClick={handleCreate} variant="contained">Create</Button>
+          <Button onClick={closeQueryView}>Close</Button>
         </DialogActions>
       </Dialog>
     </Container>
