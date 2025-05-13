@@ -17,6 +17,7 @@ After setting up the backend, run the following to set up the front end
 
 ## Tech stack
 * [Node](https://nodejs.org/en/)
+* [MUI] (https://mui.com/)
 * [Typescript](www.google.com)
 * [Fastify](https://www.fastify.io/)
 * [Prisma ORM](https://www.prisma.io/)
