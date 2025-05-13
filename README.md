@@ -131,3 +131,19 @@ After setting up the backend, run the following to set up the front end
     * 200 OK: Update successful
     * 404 Not Found: Query ID not found
     * 400 Bad Request: Malformed request
+
+### DELETE /query
+- **Description**:  DELETE an existing query for a form data entry.
+
+- **Response**:
+    ```json
+    {
+        "data": {
+            "message": "Query deleted successfully"
+        }
+    }
+    ```
+
+- **Status codes**:
+    * 200 OK: Query deleted successfully
+    * 500 Internal Server Error: Unexpected server issue

@@ -28,3 +28,10 @@ export const updateQueryStatus = async (id: string | undefined, status: string) 
         const json = await res.json()
         return json.data
 }
+
+export const deleteQuery = async (id: string | undefined) => {
+    const res = await fetch(`${API_BASE}/query/${id}`, {method: 'DELETE'})
+    if (!res.ok) throw new Error(`Failed to delete query: ${res.status}`)
+        const json = await res.json()
+        return json.data
+}

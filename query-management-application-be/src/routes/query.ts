@@ -10,6 +10,7 @@ async function queryRoutes(app: FastifyInstance) {
 
   const log = app.log.child({ component: 'queryRoutes' })
 
+  // ENDPOINT: GET/query - fetch queries
   app.get<{
     Reply: ICountedQuery
   }>('', {
@@ -28,6 +29,7 @@ async function queryRoutes(app: FastifyInstance) {
     },
   })
 
+  // ENDPOINT: POST/query - create a query for a form data entry
   app.post<{
     Body: { title: string, description: string, createdAt: Date, status: string, formDataId: string }
     Reply: IQuery
@@ -51,6 +53,7 @@ async function queryRoutes(app: FastifyInstance) {
       },
   })
 
+  // ENDPOINT: UPDATE/query - update query for a form data entry
   app.put<{
     Params: { id: string },
     Body: { title?: string, description?: string, status?: string, formDataId?: string },
@@ -84,6 +87,34 @@ async function queryRoutes(app: FastifyInstance) {
       }
     }
   })
+
+  // ENDPOINT: POST/delete - create a query for a form data entry
+  app.delete<{
+    Params: { id: string },
+    Reply: { message: string }
+  }>('/:id', {
+    async handler(req, reply) {
+      const { id } = req.params;
+  
+      try {
+        // Check if the query exists
+        const existingQuery = await prisma.query.findUnique({ where: { id } });
+        if (!existingQuery) {
+          throw new ApiError("Query not found", 404);
+        }
+  
+        // Delete the query
+        await prisma.query.delete({ where: { id } });
+  
+        reply.code(200).send({ message: 'Query deleted successfully' });
+      } catch (err: any) {
+        log.error({ err }, err.message);
+        throw new ApiError("Failed to delete query", 400);
+      }
+    }
+  })
 }
+
+
 
 export default queryRoutes

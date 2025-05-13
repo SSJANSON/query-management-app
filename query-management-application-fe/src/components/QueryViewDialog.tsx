@@ -7,9 +7,10 @@ type Props = {
   query: Query | null
   onClose: () => void
   onResolve: (id: string | undefined) => void
+  onDelete: (id: string | undefined) => void
 }
 
-export const QueryViewDialog: React.FC<Props> = ({ open, query, onClose, onResolve }) => (
+export const QueryViewDialog: React.FC<Props> = ({ open, query, onClose, onResolve, onDelete }) => (
   <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
     <DialogTitle>Query | {query?.title}</DialogTitle>
     <DialogContent dividers sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -32,6 +33,13 @@ export const QueryViewDialog: React.FC<Props> = ({ open, query, onClose, onResol
     </DialogContent>
     <DialogActions>
       <Button onClick={onClose}>Close</Button>
+      <Button
+        onClick={() => onDelete(query?.id)}
+        color="error"
+        variant="outlined"
+      >
+        Delete
+      </Button>
     </DialogActions>
   </Dialog>
 )

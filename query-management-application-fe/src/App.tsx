@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Typography, CircularProgress, Alert } from '@mui/material'
-import { fetchQueries, createQuery, updateQueryStatus } from './APIClients/QueryAPIClient'
+import { fetchQueries, createQuery, updateQueryStatus, deleteQuery } from './APIClients/QueryAPIClient'
 import { fetchFormData } from './APIClients/FormDataAPIClient'
 import { QueryCreationDialog } from './components/QueryCreationDialog'
 import { QueryViewDialog } from './components/QueryViewDialog'
@@ -112,6 +112,20 @@ const App: React.FC = () => {
     }
   }
 
+  const handleDeleteQuery = async (selectedQueryId: string | undefined) => {
+    try {
+      console.log(selectedQueryId)
+      await deleteQuery(selectedQueryId)
+      console.log('Query successfully deleted.')
+    } catch (err) {
+      console.error(err)
+      alert('Error deleting query. See console for details.')
+    } finally {
+      fetchData()
+      closeQueryView()
+    }
+  }
+
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>User Table</Typography>
@@ -142,6 +156,7 @@ const App: React.FC = () => {
         query={selectedQuery}
         onClose={closeQueryView}
         onResolve={handleMarkResolved}
+        onDelete={handleDeleteQuery}
       />
     </Container>
   )
