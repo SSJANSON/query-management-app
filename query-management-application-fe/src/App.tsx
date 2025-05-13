@@ -114,7 +114,6 @@ const App: React.FC = () => {
 
   const handleDeleteQuery = async (selectedQueryId: string | undefined) => {
     try {
-      console.log(selectedQueryId)
       await deleteQuery(selectedQueryId)
       console.log('Query successfully deleted.')
     } catch (err) {
