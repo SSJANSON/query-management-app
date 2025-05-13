@@ -47,3 +47,87 @@ After setting up the backend, run the following to set up the front end
     * 200 OK: Data fetched successfully
     * 500 Internal Server Error: Unexpected server issue
 
+### GET /query
+- **Description**: Fetch all queries related to form data.
+
+- **Response**:
+    ```json
+    {
+        "data": {
+            "query": [
+            {
+                "id": "string",
+                "title": "string",
+                "description": "string",
+                "status": "string",
+                "formDataId": "string",
+                "createdAt": "Date",
+                "updatedAt": "Date"
+            }
+            ]
+        }
+    }
+    ```
+
+- **Status codes**:
+    * 200 OK: Data fetched successfully
+    * 500 Internal Server Error: Unexpected server issue
+
+### POST /query
+- **Description**: Create a new query for a form data entry.
+
+- **Request**:
+    ```json
+    {
+        "data": {
+            "query": [
+            {
+                "title": "string",
+                "description": "string",
+                "status": "string",
+                "formDataId": "string",
+                "createdAt": "Date",
+            }
+            ]
+        }
+    }
+    ```
+
+- **Response**:
+    ```json
+    {
+        {
+        "message": "Query created successfully",
+            "data": {
+                "id": "string"
+            }
+        }
+    }
+    ```
+
+- **Status codes**:
+    * 200 OK: Data fetched successfully
+    * 400 Bad Request: Invalid payload
+    * 500 Internal Server Error: Unexpected server issue
+
+### PUT /query:id
+- **Description**: Create a new query for a form data entry.
+
+- **Request**:
+    ```json
+    {
+        "status": "Resolved"
+    }
+    ```
+
+- **Response**:
+    ```json
+    {
+        "message": "Query updated successfully"
+    }
+    ```
+
+- **Status codes**:
+    * 200 OK: Update successful
+    * 404 Not Found: Query ID not found
+    * 400 Bad Request: Malformed request
