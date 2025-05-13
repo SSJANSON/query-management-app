@@ -1,5 +1,5 @@
 # Query Management Application
-This is a simple **Query Management Application** where users can create queries. Each query will have a title, description, date, and a status (OPEN, RESOLVED). The application will consist of a simple frontend (UI), a backend API, and a database to persist the query data.
+This is a simple **Query Management Application** where users can create queries. Each query has a title, description, date, and a status (OPEN, RESOLVED). The application consists of a simple frontend (UI), a backend API, and a database to persist the query data.
 
 Queries in the context of an EDC (electronic data capture) system help identify and flag incorrect data entries for patients and alert effected data managers/ users when a query needs to be resolved.
 
@@ -27,6 +27,7 @@ After setting up the backend, run the following to set up the front end
 
 ### GET /form-data
 Description: Fetch all user form data (questions and answers).
+
 Response:
     ```json
     {
@@ -41,6 +42,7 @@ Response:
         }
     }
     ```
+    
 Status codes:
 * 200 OK: Data fetched successfully
 * 500 Internal Server Error: Unexpected server issue
