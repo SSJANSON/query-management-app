@@ -26,9 +26,9 @@ After setting up the backend, run the following to set up the front end
 ## API Documentation
 
 ### GET /form-data
-Description: Fetch all user form data (questions and answers).
+- **Description**: Fetch all user form data (questions and answers).
 
-Response:
+- **Response**:
     ```json
     {
         "data": {
@@ -42,8 +42,8 @@ Response:
         }
     }
     ```
-    
-Status codes:
-* 200 OK: Data fetched successfully
-* 500 Internal Server Error: Unexpected server issue
+
+- **Status codes**:
+    * 200 OK: Data fetched successfully
+    * 500 Internal Server Error: Unexpected server issue
 
