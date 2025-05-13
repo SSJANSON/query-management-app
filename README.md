@@ -6,6 +6,8 @@ Queries in the context of an EDC (electronic data capture) system help identify 
 ## Getting Started
 Run the following to set up the the backend
 - `cd query-management-application-be`
+- copy the .env.example file into a .env file
+- `docker-compose build`
 - `docker-compose up`
 - `npm run migrate`
 - `npm run seed`
@@ -13,11 +15,12 @@ Run the following to set up the the backend
 
 After setting up the backend, run the following to set up the front end
 - `cd query-management-application-be`
+- `npm install`
 - `npm start`
 
 ## Tech stack
 * [Node](https://nodejs.org/en/)
-* [MUI] (https://mui.com/)
+* [MUI](https://mui.com/)
 * [Typescript](www.google.com)
 * [Fastify](https://www.fastify.io/)
 * [Prisma ORM](https://www.prisma.io/)
