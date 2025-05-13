@@ -33,11 +33,11 @@ After setting up the backend, run the following to set up the front end
     {
         "data": {
             "formData": [
-            {
-                "id": "uuid",
-                "question": "What is your name?",
-                "answer": "Alice"
-            }
+                {
+                    "id": "uuid",
+                    "question": "What is your name?",
+                    "answer": "Alice"
+                }
             ]
         }
     }
@@ -55,15 +55,15 @@ After setting up the backend, run the following to set up the front end
     {
         "data": {
             "query": [
-            {
-                "id": "string",
-                "title": "string",
-                "description": "string",
-                "status": "string",
-                "formDataId": "string",
-                "createdAt": "Date",
-                "updatedAt": "Date"
-            }
+                {
+                    "id": "string",
+                    "title": "string",
+                    "description": "string",
+                    "status": "string",
+                    "formDataId": "string",
+                    "createdAt": "Date",
+                    "updatedAt": "Date"
+                }
             ]
         }
     }
@@ -81,13 +81,13 @@ After setting up the backend, run the following to set up the front end
     {
         "data": {
             "query": [
-            {
-                "title": "string",
-                "description": "string",
-                "status": "string",
-                "formDataId": "string",
-                "createdAt": "Date",
-            }
+                {
+                    "title": "string",
+                    "description": "string",
+                    "status": "string",
+                    "formDataId": "string",
+                    "createdAt": "Date",
+                }
             ]
         }
     }
@@ -97,10 +97,10 @@ After setting up the backend, run the following to set up the front end
     ```json
     {
         {
-        "message": "Query created successfully",
-            "data": {
-                "id": "string"
-            }
+            "message": "Query created successfully",
+                "data": {
+                    "id": "string"
+                }
         }
     }
     ```
