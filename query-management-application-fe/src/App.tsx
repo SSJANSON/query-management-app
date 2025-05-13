@@ -1,23 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import {
-  Container,
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  CircularProgress,
-  Alert,
-} from '@mui/material'
+import { Container, Typography, CircularProgress, Alert } from '@mui/material'
+import { fetchQueries, createQuery, updateQueryStatus } from './APIClients/QueryAPIClient'
+import { fetchFormData } from './APIClients/FormDataAPIClient'
 import { QueryCreationDialog } from './components/QueryCreationDialog'
 import { QueryViewDialog } from './components/QueryViewDialog'
 import { FormDataTable } from './components/FormDataTable'
@@ -48,22 +32,14 @@ const App: React.FC = () => {
   const [queries, setQueries] = useState<Query[]>([])
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+
   const fetchData = async () => {
     try {
-      const [formRes, queryRes] = await Promise.all([
-        fetch('http://127.0.0.1:8080/form-data'),
-        fetch('http://127.0.0.1:8080/query'),
-      ])
+      const formJson = await fetchFormData()
+      const queryJson = await fetchQueries()
 
-      if (!formRes.ok || !queryRes.ok) {
-        throw new Error(`HTTP error: ${formRes.status}, ${queryRes.status}`)
-      }
-
-      const formJson = await formRes.json()
-      const queryJson = await queryRes.json()
-
-      setFormData(formJson.data.formData)
-      setQueries(queryJson.data.query)
+      setFormData(formJson.formData)
+      setQueries(queryJson.query)
     } catch (err: any) {
       console.error(err)
       setError(err.message || 'Failed to fetch data.')
@@ -72,8 +48,6 @@ const App: React.FC = () => {
     }
   }
   useEffect(() => {
-    
-
     fetchData()
   }, [])
 
@@ -110,22 +84,10 @@ const App: React.FC = () => {
       description: description.trim(),
       status: "Open",
       formDataId: selectedUser?.id
-
     }
   
     try {
-      const response = await fetch('http://127.0.0.1:8080/query', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      })
-  
-      if (!response.ok) {
-        throw new Error(`Failed to post description: ${response.status}`)
-      }
-  
+      await createQuery(payload)
       console.log('Description successfully posted:', payload)
     } catch (err) {
       console.error(err)
@@ -133,38 +95,20 @@ const App: React.FC = () => {
     } finally {
       await fetchData()
       closeModal()
-
     }
   }
 
   const handleMarkResolved = async (selectedQueryId: string | undefined) => {
-
-    console.log("hi")
-    const payload = {
-      status: "Resolved",
-    }
-    console.log(`http://127.0.0.1:8080/query/${selectedQueryId}`)
     try {
-      const response = await fetch(`http://127.0.0.1:8080/query/${selectedQueryId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      })
+      await updateQueryStatus(selectedQueryId, "Resolved")
   
-      if (!response.ok) {
-        throw new Error(`Failed to update query: ${response.status}`)
-      }
-  
-      console.log('Description successfully updated:', payload)
+      console.log('Status successfully updated: Resolved')
     } catch (err) {
       console.error(err)
       alert('Error updating query. See console for details.')
     } finally {
       fetchData()
       closeQueryView()
-
     }
   }
 
@@ -184,7 +128,6 @@ const App: React.FC = () => {
         />
       )}
 
-      {/* Query Creation */}
       <QueryCreationDialog
         open={modalOpen}
         selectedUser={selectedUser}
@@ -194,7 +137,6 @@ const App: React.FC = () => {
         onSubmit={handleCreate}
       />
 
-      {/* Query View */}
       <QueryViewDialog
         open={queryViewOpen}
         query={selectedQuery}
